@@ -47,11 +47,11 @@ model Hospital{
 model User{
   id String @id @default(uuid())
   name String 
-  document String 
+  document String @unique
   password String 
   age String 
   gender Gender 
-  email String 
+  email String @unique
   location String 
   score String
 
@@ -63,7 +63,7 @@ model User{
 model Admin{
   id String @id @default(uuid())
   name String 
-  email String 
+  email String @unique
   password String
   
   hospital_id String 
