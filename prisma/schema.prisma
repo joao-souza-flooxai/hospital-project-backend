@@ -9,6 +9,120 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite" 
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Status{
+  ACTIVE
+  PENDING
+  CLOSED
+}
+
+enum Type{
+  IDOSOS 
+  JOVENS
+  FAMILIAR
+}
+
+enum Gender{
+  MALE 
+  FEMALE 
+  OTHER
+}
+
+
+model Hospital{
+  id String @id @default(uuid())
+  name String
+  location String
+  status Status @default(ACTIVE)
+
+
+  Admin Admin[]
+
+  Positions Positions[]
+}
+
+model User{
+  id String @id @default(uuid())
+  name String 
+  document String 
+  password String 
+  age String 
+  gender Gender 
+  email String 
+  location String 
+  score String
+
+  Application Application[]
+
+  UserScoreLog UserScoreLog[]
+}
+
+model Admin{
+  id String @id @default(uuid())
+  name String 
+  email String 
+  password String
+  
+  hospital_id String 
+  hospital Hospital @relation(fields:[hospital_id], references:[id]) 
+
+  Positions Positions[]
+
+  Application Application[]
+}
+
+
+model Positions{
+  id String @id @default(uuid())
+  description String 
+  status Status @default(ACTIVE)
+  title String 
+  type Type
+  created_at   DateTime      @default(now())
+
+ hospital_id String 
+ hospital Hospital @relation(fields:[hospital_id], references:[id]) 
+ 
+ created_by_admin String 
+ admin Admin @relation(fields:[created_by_admin], references:[id]) 
+
+ Application Application[]
+
+ UserScoreLog UserScoreLog[]
+}
+
+model Application{
+   id String @id @default(uuid())
+   status Status @default(ACTIVE)
+   created_at   DateTime      @default(now())
+   finished_at  DateTime?     
+   approved_at  DateTime? 
+   score_earned String 
+
+  user_id String 
+  user User @relation(fields:[user_id], references:[id]) 
+
+  positions_id String 
+  position Positions @relation(fields:[positions_id], references:[id]) 
+  
+
+  action_by_admin String 
+  admin Admin @relation(fields:[action_by_admin], references:[id]) 
+}
+
+model UserScoreLog{
+   id String @id @default(uuid())
+   created_at   DateTime      @default(now())
+   score_earned String 
+
+  user_id String 
+  user User @relation(fields:[user_id], references:[id]) 
+
+  positions_id String 
+  position Positions @relation(fields:[positions_id], references:[id]) 
+}
+
+
