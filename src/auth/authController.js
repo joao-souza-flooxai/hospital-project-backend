@@ -1,11 +1,11 @@
 import { authService } from "./authService.js";
-import { loginSchema } from "./authZodSchema.js";
+import { authZodSchemas } from "./authZodSchema.js";
 
 export const authController =  {
  
   login: async(req, reply)=>{
 
-        const data = loginSchema.parse(req.body)
+        const data = authZodSchemas.loginSchema.parse(req.body)
 
         const isAdminRoute = req.routerPath.includes('/admin')
 

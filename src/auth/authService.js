@@ -1,6 +1,7 @@
 import { adminRepository }   from "../admin/adminRepository.js";
 import bcrypt from 'bcryptjs';
 import { ClientError } from "../errors/clientError.js";
+import { authZodSchemas } from "./authZodSchema.js";
 
 export const authService = {
 
@@ -14,6 +15,7 @@ export const authService = {
     const validPassword = await bcrypt.compare(password, entity.password)
     if (!validPassword) throw new ClientError('Invalid Credentials')
 
+    //ToDo padrozinar Responses.
     return {
       id: entity.id,
       email: entity.email,
