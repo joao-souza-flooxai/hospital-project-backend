@@ -41,7 +41,7 @@ model Hospital{
 
   Admin Admin[]
 
-  Positions Positions[]
+  Position  Position []
 }
 
 model User{
@@ -69,13 +69,13 @@ model Admin{
   hospital_id String 
   hospital Hospital @relation(fields:[hospital_id], references:[id]) 
 
-  Positions Positions[]
+  Position  Position []
 
   Application Application[]
 }
 
 
-model Positions{
+model Position {
   id String @id @default(uuid())
   description String 
   status Status @default(ACTIVE)
@@ -106,7 +106,7 @@ model Application{
   user User @relation(fields:[user_id], references:[id]) 
 
   positions_id String 
-  position Positions @relation(fields:[positions_id], references:[id]) 
+  position Position  @relation(fields:[positions_id], references:[id]) 
   
 
   action_by_admin String 
@@ -122,7 +122,7 @@ model UserScoreLog{
   user User @relation(fields:[user_id], references:[id]) 
 
   positions_id String 
-  position Positions @relation(fields:[positions_id], references:[id]) 
+  position Position  @relation(fields:[positions_id], references:[id]) 
 }
 
 
