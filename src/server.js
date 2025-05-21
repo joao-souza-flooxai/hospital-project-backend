@@ -3,15 +3,20 @@ import cors from "@fastify/cors";
 import dotenv from 'dotenv';
 import authRoutes from "../src/auth/authRoutes.js";
 import { errorHandler } from "./errors/errorHandler.js";
-
+import userRoutes from "./user/userRoutes.js";
 const app = fastify();
 dotenv.config();
 app.register(cors, {
     origin: '*'
 })
 
+//Routes
 app.register(authRoutes)
+app.register(userRoutes)
+
+//Middleware
 app.setErrorHandler(errorHandler);
+
 
 app.listen({ port: process.env.PORT || 3000 }).then(() => {
 

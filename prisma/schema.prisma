@@ -49,11 +49,11 @@ model User{
   name String 
   document String @unique
   password String 
-  age String 
+  age Int
   gender Gender 
   email String @unique
   location String 
-  score String
+  score Int
 
   Application Application[]
 
@@ -100,7 +100,7 @@ model Application{
    created_at   DateTime      @default(now())
    finished_at  DateTime?     
    approved_at  DateTime? 
-   score_earned String 
+   score_earned Int 
 
   user_id String 
   user User @relation(fields:[user_id], references:[id]) 
@@ -116,7 +116,7 @@ model Application{
 model UserScoreLog{
    id String @id @default(uuid())
    created_at   DateTime      @default(now())
-   score_earned String 
+   score_earned Int 
 
   user_id String 
   user User @relation(fields:[user_id], references:[id]) 
