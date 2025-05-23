@@ -13,5 +13,12 @@ export const authController =  {
         return reply.send({ success: true, user: result })
 
   },
+  register: async (req, reply) => {
+    const data = authZodSchemas.registerSchema.parse(req.body)
+
+    const result = await authService.register(data)
+
+    return reply.code(201).send({ success: true, user: result })
+  }
 
 }

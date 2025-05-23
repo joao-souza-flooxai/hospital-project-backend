@@ -8,12 +8,10 @@ export const userService = {
 
     const hashedPassword = await bcrypt.hash(data.password, 10)
 
-    const userToCreate = {
+    const user = await userRepository.create({
       ...data,
       password: hashedPassword
-    }
-
-    const user = await userRepository.create(userToCreate)
+    })
 
     return {
       id: user.id,
@@ -24,50 +22,50 @@ export const userService = {
 
   getById: async (id) => {
     const user = await userRepository.findById(id)
-    if (!user) {
-      throw new ClientError('User not found')
-    }
+    if (!user) throw new ClientError('User not found')
     return user
+  },
+
+  getByEmail: async (email) => {
+    const user = await userRepository.findByEmail(email)
+    return user || null
   },
 
   listAll: async () => {
     return await userRepository.listAll()
   },
 
-  delete: async (id) => {
-    return await userRepository.delete(id)
-  },
-
   update: async (id, data) => {
-    const userExists = await userRepository.findById(id)
-    if (!userExists) {
-      throw new ClientError('User not found')
-    }
+    const userExists = await userService.getById(id)
+    if (!userExists) throw new ClientError('User not found')
 
-    await ensureUniqueFields({ 
-      email: data.email, 
-      document: data.document, 
-      userIdToExclude: id 
+    await ensureUniqueFields({
+      email: data.email,
+      document: data.document,
+      userIdToExclude: id
     })
 
     const updatedUser = await userRepository.update(id, data)
     return updatedUser
+  },
+
+  delete: async (id) => {
+    return await userRepository.delete(id)
   }
 }
 
 async function ensureUniqueFields({ email, document, userIdToExclude = null }) {
   if (email) {
-    const existingEmail = await userRepository.findByEmail(email);
+    const existingEmail = await userService.getByEmail(email)
     if (existingEmail && existingEmail.id !== userIdToExclude) {
-      throw new ClientError('Email already in use');
+      throw new ClientError('Email already in use')
     }
   }
 
   if (document) {
-    const existingDocument = await userRepository.findByDocument(document);
+    const existingDocument = await userRepository.findByDocument(document)
     if (existingDocument && existingDocument.id !== userIdToExclude) {
-      throw new ClientError('Document already in use');
+      throw new ClientError('Document already in use')
     }
   }
 }
-

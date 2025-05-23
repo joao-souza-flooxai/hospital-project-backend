@@ -6,6 +6,7 @@ export const errorHandler = (error, request, reply) => {
       path: err.path.join('.'),
       message: err.message
     }));
+    console.log(error)
     return reply.status(400).send({
       message: "Validation error",
       errors: validationErrors
