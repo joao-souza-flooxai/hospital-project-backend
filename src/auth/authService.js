@@ -46,9 +46,13 @@ function jwtSign({ id, email, role, hospital_id = null }) {
   )
 
   return {
-    id,
-    email,
-    role,
+    user: {
+      id,
+      email,
+      role,
+      hospital_id 
+    },
     token
   }
 }
+
