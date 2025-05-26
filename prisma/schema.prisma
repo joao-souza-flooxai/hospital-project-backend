@@ -93,7 +93,7 @@ model Position {
 
 model Application {
   id          String    @id @default(uuid())
-  status      Status    @default(ACTIVE)
+  status      Status    @default(PENDING)
   created_at  DateTime  @default(now())
   finished_at DateTime?
   approved_at DateTime?

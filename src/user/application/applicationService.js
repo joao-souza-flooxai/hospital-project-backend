@@ -34,9 +34,19 @@ export const applicationService  = {
     });
   },
 
-  getMyApplications: async (user_id) => {
-    return applicationRepository.findByUser(user_id);
-  },
+getMyApplications: async (user_id) => {
+  const applications = await applicationRepository.findByUser(user_id)
+
+  return applications.map(app => ({
+    id: app.id,
+    title: app.position.title,
+    description: app.position.description,
+    status: app.status,
+    hospitalName: app.position.hospital?.name || 'N/A',
+    hospitalLocation: app.position.hospital?.location || 'N/A',
+  }))
+},
+
 
   getById: async (id, user_id) => {
     const app = await applicationRepository.findById(id);

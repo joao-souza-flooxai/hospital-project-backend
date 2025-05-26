@@ -5,7 +5,10 @@ export const applicationRepository = {
 
   findByUser: (user_id) => prisma.application.findMany({
     where: { user_id },
-    include: { position: true },
+    include: { position: {
+      include: {
+        hospital: true 
+      } }},
   }),
 
   findById: (id) => prisma.application.findUnique({ where: { id } }),
