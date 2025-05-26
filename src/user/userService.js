@@ -51,7 +51,10 @@ export const userService = {
 
   delete: async (id) => {
     return await userRepository.delete(id)
-  }
+  },
+  leaderBoard: async (limit) => {
+    return await userRepository.findLeaderboard(limit);
+  } 
 }
 
 async function ensureUniqueFields({ email, document, userIdToExclude = null }) {

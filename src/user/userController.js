@@ -30,5 +30,15 @@ export const userController = {
     const { id } = req.params
     await userService.delete(id)
     return reply.status(204).send()
+  },
+
+  leaderBoard: async (req, reply) => {
+    const { limit } = req.query;
+
+    const users = await userService.leaderBoard(Number(limit) || 5);
+
+    return reply.send(users);
   }
+
+
 }

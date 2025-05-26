@@ -10,4 +10,7 @@ export default async function userRoutes(app) {
   app.put('/users/:id', (req, reply) => userController.update({ req, reply }))
 
   app.delete('/users/:id', (req, reply) => userController.delete({ req, reply }))
+  
+  app.get('/users/leaderboard', userController.leaderBoard);
+
 }
