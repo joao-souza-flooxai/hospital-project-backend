@@ -1,10 +1,15 @@
 import { positionRepository } from "./positionRepository.js"
-import { ClientError } from "../../errors/clientError.js"
+import { ClientError } from "../../../errors/clientError.js";
 
 
 export const positionService = {
   create: async (data) => {
-    return await positionRepository.create(data)
+   const score = getScoreByType(data.type);
+
+    return await positionRepository.create({
+      ...data,
+      score,
+    });
   },
 
   update: async (id, data, hospitalId) => {
@@ -29,5 +34,18 @@ export const positionService = {
 
   list: async (hospitalId) => {
     return await positionRepository.findAllByHospital(hospitalId)
+  }
+}
+
+function getScoreByType(type) {
+  switch (type) {
+    case 'IDOSOS':
+      return 500;
+    case 'JOVENS':
+      return 300;
+    case 'FAMILIAR':
+      return 300;
+    default:
+      return 0;
   }
 }

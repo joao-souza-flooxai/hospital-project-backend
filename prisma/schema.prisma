@@ -13,116 +13,109 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Status{
+enum Status {
   ACTIVE
   PENDING
   CLOSED
 }
 
-enum Type{
-  IDOSOS 
+enum Type {
+  IDOSOS
   JOVENS
   FAMILIAR
 }
 
-enum Gender{
-  MALE 
-  FEMALE 
+enum Gender {
+  MALE
+  FEMALE
   OTHER
 }
 
-
-model Hospital{
-  id String @id @default(uuid())
-  name String
+model Hospital {
+  id       String @id @default(uuid())
+  name     String
   location String
-  status Status @default(ACTIVE)
-
+  status   Status @default(ACTIVE)
 
   Admin Admin[]
 
-  Position  Position []
+  Position Position[]
 }
 
-model User{
-  id String @id @default(uuid())
-  name String 
+model User {
+  id       String @id @default(uuid())
+  name     String
   document String @unique
-  password String 
-  age Int
-  gender Gender 
-  email String @unique
-  location String 
-  score Int
+  password String
+  age      Int
+  gender   Gender
+  email    String @unique
+  location String
+  score    Int
 
   Application Application[]
 
   UserScoreLog UserScoreLog[]
 }
 
-model Admin{
-  id String @id @default(uuid())
-  name String 
-  email String @unique
+model Admin {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
   password String
-  
-  hospital_id String 
-  hospital Hospital @relation(fields:[hospital_id], references:[id]) 
 
-  Position  Position []
+  hospital_id String
+  hospital    Hospital @relation(fields: [hospital_id], references: [id])
+
+  Position Position[]
 
   Application Application[]
 }
 
-
 model Position {
-  id String @id @default(uuid())
-  description String 
-  status Status @default(ACTIVE)
-  title String 
-  type Type
-  created_at   DateTime      @default(now())
+  id               String   @id @default(uuid())
+  description      String
+  status           Status   @default(ACTIVE)
+  title            String
+  type             Type
+  created_at       DateTime @default(now())
+  spots            Int      @default(1)
+  hospital_id      String
+  hospital         Hospital @relation(fields: [hospital_id], references: [id])
+  score            Int      @default(0)
+  created_by_admin String
+  admin            Admin    @relation(fields: [created_by_admin], references: [id])
 
- hospital_id String 
- hospital Hospital @relation(fields:[hospital_id], references:[id]) 
- 
- created_by_admin String 
- admin Admin @relation(fields:[created_by_admin], references:[id]) 
+  Application Application[]
 
- Application Application[]
-
- UserScoreLog UserScoreLog[]
+  UserScoreLog UserScoreLog[]
 }
 
-model Application{
-   id String @id @default(uuid())
-   status Status @default(ACTIVE)
-   created_at   DateTime      @default(now())
-   finished_at  DateTime?     
-   approved_at  DateTime? 
-   score_earned Int 
+model Application {
+  id          String    @id @default(uuid())
+  status      Status    @default(ACTIVE)
+  created_at  DateTime  @default(now())
+  finished_at DateTime?
+  approved_at DateTime?
 
-  user_id String 
-  user User @relation(fields:[user_id], references:[id]) 
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
 
-  positions_id String 
-  position Position  @relation(fields:[positions_id], references:[id]) 
-  
+  positions_id String
+  position     Position @relation(fields: [positions_id], references: [id])
 
-  action_by_admin String 
-  admin Admin @relation(fields:[action_by_admin], references:[id]) 
+  action_by_admin String?
+  admin           Admin?  @relation(fields: [action_by_admin], references: [id])
 }
 
-model UserScoreLog{
-   id String @id @default(uuid())
-   created_at   DateTime      @default(now())
-   score_earned Int 
+model UserScoreLog {
+  id           String   @id @default(uuid())
+  created_at   DateTime @default(now())
+  score_earned Int
 
-  user_id String 
-  user User @relation(fields:[user_id], references:[id]) 
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
 
-  positions_id String 
-  position Position  @relation(fields:[positions_id], references:[id]) 
+  positions_id String
+  position     Position @relation(fields: [positions_id], references: [id])
 }
-
-

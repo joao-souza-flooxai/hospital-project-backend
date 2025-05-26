@@ -7,7 +7,7 @@ import userRoutes from "./user/userRoutes.js";
 import adminRoutes from "./admin/adminRoutes.js";
 import publicPositionRoutes from "./positions/positionRoutes.js";
 import profileRoutes from "./me/profileRoutes.js";
-
+import applicationRoutes from "./user/application/applicationRoutes.js";
 const app = fastify();
 dotenv.config();
 app.register(cors, {
@@ -20,6 +20,7 @@ app.register(userRoutes)
 app.register(adminRoutes)
 app.register(publicPositionRoutes);
 app.register(profileRoutes);
+app.register(applicationRoutes);
 
 //Middleware
 app.setErrorHandler(errorHandler);
