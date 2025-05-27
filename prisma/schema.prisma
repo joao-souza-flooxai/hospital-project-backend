@@ -86,9 +86,8 @@ model Position {
   created_by_admin String
   admin            Admin    @relation(fields: [created_by_admin], references: [id])
 
-  Application Application[]
-
-  UserScoreLog UserScoreLog[]
+  Application  Application[]  @relation()
+  UserScoreLog UserScoreLog[] @relation()
 }
 
 model Application {
@@ -102,7 +101,7 @@ model Application {
   user    User   @relation(fields: [user_id], references: [id])
 
   positions_id String
-  position     Position @relation(fields: [positions_id], references: [id])
+  position     Position @relation(fields: [positions_id], references: [id], onDelete: Cascade)
 
   action_by_admin String?
   admin           Admin?  @relation(fields: [action_by_admin], references: [id])
@@ -117,5 +116,5 @@ model UserScoreLog {
   user    User   @relation(fields: [user_id], references: [id])
 
   positions_id String
-  position     Position @relation(fields: [positions_id], references: [id])
+  position     Position @relation(fields: [positions_id], references: [id], onDelete: Cascade)
 }

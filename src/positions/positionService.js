@@ -33,7 +33,8 @@ export const positionService = {
         spots: true,
         hospital: {
           select: {
-            name: true
+            name: true,
+            location: true
           }
         }
       }
@@ -67,7 +68,8 @@ export const positionService = {
         created_at: true,
         hospital: {
           select: {
-            name: true
+            name: true,
+            location: true
           }
         }
       }

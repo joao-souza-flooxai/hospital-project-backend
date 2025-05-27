@@ -23,17 +23,25 @@ export const positionController = {
     return reply.send(position)
   },
 
-  delete: async (request, reply) => {
-    const { id } = request.params
-    const hospitalId = request.user.hospital_id
-
-    await positionService.delete(id, hospitalId)
-    return reply.code(204).send()
+  delete: async (req, reply) => {
+    const adminId = req.user.id
+    const hospitalId = req.user.hospital_id;
+    const { id } = req.params
+    const result = await positionService.delete({ id, hospitalId ,adminId })
+    return reply.send(result)
   },
 
   list: async (request, reply) => {
     const hospitalId = request.user.hospital_id
-    const positions = await positionService.list(hospitalId)
-    return reply.send(positions)
+    const { filter, page } = request.query
+
+    const result = await positionService.list({
+      hospitalId,
+      filter,
+      page: Number(page) || 1
+    })
+
+    return reply.send(result)
   }
 }
+
