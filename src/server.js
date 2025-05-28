@@ -11,7 +11,7 @@ import applicationRoutes from "./user/application/applicationRoutes.js";
 const app = fastify();
 dotenv.config();
 app.register(fastifyCors, {
-  origin: 'hospital-project-frontend-production.up.railway.app'
+  origin: 'https://hospital-project-frontend-production.up.railway.app'
 })
 //Routes
 app.register(authRoutes)
@@ -25,7 +25,7 @@ app.register(applicationRoutes);
 app.setErrorHandler(errorHandler);
 
 
-app.listen({ port: process.env.PORT || 3000 }).then(() => {
+app.listen({ port: process.env.PORT || 8080, host: '0.0.0.0' }).then(() => {
 
     console.log('Server running on PORT:  ' +  process.env.PORT)
 })
