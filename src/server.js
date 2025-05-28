@@ -11,7 +11,7 @@ import applicationRoutes from "./user/application/applicationRoutes.js";
 const app = fastify();
 dotenv.config();
 app.register(fastifyCors, {
-  origin: 'https://hospital-project-frontend-production.up.railway.app'
+  origin: 'hospital-project-frontend-production.up.railway.app'
 })
 //Routes
 app.register(authRoutes)
