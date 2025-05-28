@@ -10,10 +10,9 @@ import profileRoutes from "./me/profileRoutes.js";
 import applicationRoutes from "./user/application/applicationRoutes.js";
 const app = fastify();
 dotenv.config();
-app.register(cors, {
-    origin: '*'
+fastify.register(fastifyCors, {
+  origin: 'https://hospital-project-frontend-production.up.railway.app'
 })
-
 //Routes
 app.register(authRoutes)
 app.register(userRoutes)
