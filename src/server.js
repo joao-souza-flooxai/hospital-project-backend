@@ -1,5 +1,5 @@
 import fastify from "fastify";
-import cors from "@fastify/cors";
+import fastifyCors  from "@fastify/cors";
 import dotenv from 'dotenv';
 import authRoutes from "../src/auth/authRoutes.js";
 import { errorHandler } from "./errors/errorHandler.js";
