@@ -7,6 +7,7 @@ import { adminService } from '../admin/adminService.js'
 const JWT_SECRET = process.env.JWT_SECRET
 
 export const authService = {
+  
   async login({ email, password }, isAdmin = false) {
     const service = isAdmin ? adminService : userService
     const entity = await service.getByEmail(email)

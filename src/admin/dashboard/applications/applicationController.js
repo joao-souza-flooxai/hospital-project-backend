@@ -35,7 +35,7 @@ export const applicationController = {
       const hospitalId = req.user.hospital_id
 
       const applications = await applicationService.listAll({ adminId, hospitalId })
-
+      console.log(applications);
       return reply.send(applications)
     } catch (error) {
       console.error(error)

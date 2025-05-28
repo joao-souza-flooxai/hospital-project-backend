@@ -55,27 +55,30 @@ export const positionRepository = {
 },
 
   findManyByHospital: async ({ hospitalId, filter, skip, take }) => {
-    return await prisma.position.findMany({
-      where: {
-        hospital_id: hospitalId,
-        title: {
-          contains: filter || '',
-          mode: 'insensitive',
-        },
+  return await prisma.position.findMany({
+    where: {
+      hospital_id: hospitalId,
+      title: {
+        contains: filter || '',
+        mode: 'insensitive',
       },
-      include: {
-        admin: {
-          select: { id: true, name: true, email: true },
-        },
-        hospital: {
-          select: { id: true, name: true },
-        },
+      spots: {
+        gt: 0, 
       },
-      orderBy: { created_at: 'desc' },
-      skip,
-      take,
-    })
-  },
+    },
+    include: {
+      admin: {
+        select: { id: true, name: true, email: true },
+      },
+      hospital: {
+        select: { id: true, name: true },
+      },
+    },
+    orderBy: { created_at: 'desc' },
+    skip,
+    take,
+  })
+},
 
   countByHospital: async ({ hospitalId, filter }) => {
     return await prisma.position.count({

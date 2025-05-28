@@ -43,18 +43,24 @@ export const userRepository = {
   },
   
   findLeaderboard: async (limit) => {
-  return await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      location: true,
-      score: true,
-    },
-    orderBy: {
-      score: 'desc',
-    },
-    take: limit, 
-  });
-}
+    return await prisma.user.findMany({
+      where: {
+        score: {
+          gt: 0
+        }
+      },
+      select: {
+        id: true,
+        name: true,
+        location: true,
+        score: true,
+      },
+      orderBy: {
+        score: 'desc',
+      },
+      take: limit,
+    });
+  }
+
 
 };
