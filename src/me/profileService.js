@@ -65,7 +65,7 @@ export const profileService = {
         name: updatedAdmin.name,
         email: updatedAdmin.email,
         role: 'admin',
-        hospital
+        hospital: hospital?.name || 'Unknown'
       }
     }
 
