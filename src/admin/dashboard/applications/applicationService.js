@@ -43,7 +43,7 @@ export const applicationService = {
       operations.push(updateUser)
     } else {
       const updatePosition = prisma.position.update({
-        where: { id: application.position_id },
+        where: { id: application.positions_id },
         data: {
           spots: { increment: 1 },
         },
