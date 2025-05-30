@@ -2,11 +2,11 @@ import { positionService } from './positionService.js'
 
 export const positionController = {
   
-  listPublic: async (req, reply) => {
-    const { search = '', page = 1, pageSize = 10 } = req.query
-
+  listPublic: async (request, reply) => {
+    const { filter = '', page = 1, pageSize = 10 } = request.query
+    console.log("filter:", filter);
     const result = await positionService.listPublic({
-      search,
+      filter,
       page: Number(page),
       pageSize: Number(pageSize)
     })

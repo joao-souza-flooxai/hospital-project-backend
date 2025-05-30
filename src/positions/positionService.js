@@ -2,7 +2,7 @@ import { prisma } from "../prisma/client.js"
 
 export const positionService = {
 
- listPublic: async ({ search = '', page = 1, pageSize = 10 }) => {
+ listPublic: async ({ filter = '', page = 1, pageSize = 10 }) => {
   const skip = (page - 1) * pageSize
 
   const where = {
@@ -11,7 +11,7 @@ export const positionService = {
       gt: 0 
     },
     title: {
-      contains: search,
+      contains: filter,
       mode: 'insensitive'
     }
   }

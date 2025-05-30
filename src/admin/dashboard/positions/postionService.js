@@ -51,19 +51,20 @@ export const positionService = {
     return { message: 'Position deletada com sucesso' }},
 
 
-  async list({ hospitalId, filter, page = 1, pageSize = 10 }) {
-    const skip = (page - 1) * pageSize
+  async list({ hospitalId, filter, page = 1, pageSize = 10, orderBy = 'created_at', orderDirection = 'desc' }) {
+  const skip = (page - 1) * pageSize
 
-    const [positions, total] = await Promise.all([
-      positionRepository.findManyByHospital({ hospitalId, filter, skip, take: pageSize }),
-      positionRepository.countByHospital({ hospitalId, filter }),
-    ])
+  const [positions, total] = await Promise.all([
+    positionRepository.findManyByHospital({ hospitalId, filter, skip, take: pageSize, orderBy, orderDirection }),
+    positionRepository.countByHospital({ hospitalId, filter }),
+  ])
 
-    return {
-      positions,
-      totalPages: Math.ceil(total / pageSize),
-    }
-  },
+  return {
+    positions,
+    totalPages: Math.ceil(total / pageSize),
+  }
+}
+
 }
 
 function getScoreByType(type) {

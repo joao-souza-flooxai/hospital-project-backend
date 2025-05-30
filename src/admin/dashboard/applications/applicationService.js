@@ -19,7 +19,9 @@ export const applicationService = {
       throw new Error('Invalid status')
     }
 
-    const updatedApplication = await prisma.application.update({
+    const operations = []
+
+    const updateApplication = prisma.application.update({
       where: { id: applicationId },
       data: {
         status,
@@ -29,14 +31,27 @@ export const applicationService = {
       },
     })
 
+    operations.push(updateApplication)
+
     if (status === 'ACTIVE') {
-      await prisma.user.update({
+      const updateUser = prisma.user.update({
         where: { id: application.user_id },
         data: {
           score: application.user.score + application.position.score,
         },
       })
+      operations.push(updateUser)
+    } else {
+      const updatePosition = prisma.position.update({
+        where: { id: application.positions_id },
+        data: {
+          spots: { increment: 1 },
+        },
+      })
+      operations.push(updatePosition)
     }
+
+    const [updatedApplication] = await prisma.$transaction(operations)
 
     return updatedApplication
   },
@@ -50,7 +65,7 @@ export const applicationService = {
       throw new Error('Not authorized')
     }
 
-    return prisma.application.findMany({
+    const applications = await prisma.application.findMany({
       where: {
         position: {
           hospital_id: hospitalId,
@@ -61,7 +76,15 @@ export const applicationService = {
         position: true,
       },
     })
-  },
+
+
+    const ordered = applications.sort((a, b) => {
+      const order = { PENDING: 1, ACTIVE: 2, CLOSED: 3 }
+      return order[a.status] - order[b.status]
+  })
+
+  return ordered
+},
 
   async listByUser({ userId, adminId }) {
     const admin = await prisma.admin.findUniqueOrThrow({

@@ -54,7 +54,15 @@ export const positionRepository = {
   })
 },
 
-  findManyByHospital: async ({ hospitalId, filter, skip, take }) => {
+ findManyByHospital: async ({ hospitalId, filter, skip, take, orderBy = 'created_at', orderDirection = 'desc' }) => {
+  const orderConfig = {}
+
+  if (orderBy === 'localidade') {
+    orderConfig.hospital = { location: orderDirection }
+  } else {
+    orderConfig[orderBy] = orderDirection
+  }
+
   return await prisma.position.findMany({
     where: {
       hospital_id: hospitalId,
@@ -63,7 +71,7 @@ export const positionRepository = {
         mode: 'insensitive',
       },
       spots: {
-        gt: 0, 
+        gt: 0,
       },
     },
     include: {
@@ -71,10 +79,10 @@ export const positionRepository = {
         select: { id: true, name: true, email: true },
       },
       hospital: {
-        select: { id: true, name: true },
+        select: { id: true, name: true, location: true }, 
       },
     },
-    orderBy: { created_at: 'desc' },
+    orderBy: orderConfig,
     skip,
     take,
   })
