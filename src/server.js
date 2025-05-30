@@ -1,5 +1,5 @@
 import fastify from "fastify";
-import cors from "@fastify/cors";
+import fastifyCors  from "@fastify/cors";
 import dotenv from 'dotenv';
 import authRoutes from "../src/auth/authRoutes.js";
 import { errorHandler } from "./errors/errorHandler.js";
@@ -10,10 +10,9 @@ import profileRoutes from "./me/profileRoutes.js";
 import applicationRoutes from "./user/application/applicationRoutes.js";
 const app = fastify();
 dotenv.config();
-app.register(cors, {
-    origin: '*'
+app.register(fastifyCors, {
+  origin: 'https://hospital-project-frontend-production.up.railway.app'
 })
-
 //Routes
 app.register(authRoutes)
 app.register(userRoutes)
@@ -26,7 +25,7 @@ app.register(applicationRoutes);
 app.setErrorHandler(errorHandler);
 
 
-app.listen({ port: process.env.PORT || 3000 }).then(() => {
+app.listen({ port: process.env.PORT || 8080, host: '0.0.0.0' }).then(() => {
 
     console.log('Server running on PORT:  ' +  process.env.PORT)
 })
