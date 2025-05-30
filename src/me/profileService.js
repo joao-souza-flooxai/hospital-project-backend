@@ -53,15 +53,19 @@ export const profileService = {
     const { id, role } = user
 
     if (role === 'admin') {
+      delete data.hospital
       delete data.hospital_id
 
       const updatedAdmin = await adminService.update(id, data)
-
+      const hospital = await prisma.hospital.findUnique({
+        where: { id: updatedAdmin.hospital_id }
+      })
       return {
         id: updatedAdmin.id,
         name: updatedAdmin.name,
         email: updatedAdmin.email,
-        role: 'admin'
+        role: 'admin',
+        hospital: hospital?.name || 'Unknown'
       }
     }
 
@@ -69,6 +73,7 @@ export const profileService = {
       delete data.score
       const updatedUser = await userService.update(id, data)
 
+      
       return {
         id: updatedUser.id,
         name: updatedUser.name,
