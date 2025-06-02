@@ -4,12 +4,22 @@ import { adminRepository } from "../../adminRepository.js"
 export const positionService = {
   async create(data) {
     const score = getScoreByType(data.type)
+    if (data.finished_at) 
+      data.finished_at = new Date(`${data.finished_at}T00:00:00Z`);
+
     return await positionRepository.create({ ...data, score })
   },
 
   async update(id, data, hospitalId) {
     const existing = await positionRepository.findById(id)
-
+    if (data.finished_at){
+       data.finished_at = new Date(`${data.finished_at}T00:00:00Z`);
+         data = {
+          ...data,
+          isExpired: data.finished_at <= new Date()
+        };
+    } 
+     
     if (!existing || existing.hospital_id !== hospitalId) {
       throw new ClientError("Position not found or unauthorized", 403)
     }

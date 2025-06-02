@@ -3,18 +3,19 @@ import { prisma } from "../prisma/client.js"
 export const positionService = {
 
  listPublic: async ({ filter = '', page = 1, pageSize = 10 }) => {
-  const skip = (page - 1) * pageSize
+  const skip = (page - 1) * pageSize;
 
   const where = {
     status: 'ACTIVE',
+    isExpired: false,
     spots: {
-      gt: 0 
+      gt: 0, 
     },
     title: {
       contains: filter,
-      mode: 'insensitive'
-    }
-  }
+      mode: 'insensitive',
+    },
+  };
 
   const [positions, total] = await Promise.all([
     prisma.position.findMany({
@@ -22,7 +23,7 @@ export const positionService = {
       skip,
       take: pageSize,
       orderBy: {
-        created_at: 'desc'
+        created_at: 'desc',
       },
       select: {
         id: true,
@@ -30,24 +31,25 @@ export const positionService = {
         description: true,
         type: true,
         created_at: true,
+        finished_at: true,
         spots: true,
         hospital: {
           select: {
             name: true,
-            location: true
-          }
-        }
-      }
+            location: true,
+          },
+        },
+      },
     }),
-    prisma.position.count({ where })
-  ])
+    prisma.position.count({ where }),
+  ]);
 
   return {
     positions,
     total,
     page,
-    totalPages: Math.ceil(total / pageSize)
-  }
+    totalPages: Math.ceil(total / pageSize),
+  };
 },
 
   listByUser: async (userId) => {

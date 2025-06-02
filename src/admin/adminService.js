@@ -48,6 +48,7 @@ export const adminService = {
       data.password = await bcrypt.hash(data.password, 10)
     }
 
+
     const updated = await adminRepository.update(id, data)
     return updated
   },

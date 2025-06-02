@@ -14,6 +14,11 @@ export const applicationService  = {
       throw new Error('Não há mais vagas disponíveis para essa posição.');
     }
 
+    if (position.finished_at && new Date(position.finished_at) < new Date()) {
+      throw new Error('Vaga já expirada!');
+    }
+
+    position.fin
     return await applicationRepository.$transaction(async (prisma) => {
       const app = await prisma.application.create({
           data: {

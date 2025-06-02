@@ -8,10 +8,11 @@ import adminRoutes from "./admin/adminRoutes.js";
 import publicPositionRoutes from "./positions/positionRoutes.js";
 import profileRoutes from "./me/profileRoutes.js";
 import applicationRoutes from "./user/application/applicationRoutes.js";
+import './utils/removeExpiredPositions.js'
 const app = fastify();
 dotenv.config();
 app.register(fastifyCors, {
-  origin: 'https://hospital-project-frontend-production.up.railway.app'
+  origin: true
 })
 //Routes
 app.register(authRoutes)

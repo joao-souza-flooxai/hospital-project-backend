@@ -73,18 +73,20 @@ model Admin {
 }
 
 model Position {
-  id               String   @id @default(uuid())
+  id               String    @id @default(uuid())
   description      String
-  status           Status   @default(ACTIVE)
+  status           Status    @default(ACTIVE)
   title            String
   type             Type
-  created_at       DateTime @default(now())
-  spots            Int      @default(1)
+  created_at       DateTime  @default(now())
+  finished_at      DateTime?
+  isExpired        Boolean   @default(false)
+  spots            Int       @default(1)
   hospital_id      String
-  hospital         Hospital @relation(fields: [hospital_id], references: [id])
-  score            Int      @default(0)
+  hospital         Hospital  @relation(fields: [hospital_id], references: [id])
+  score            Int       @default(0)
   created_by_admin String
-  admin            Admin    @relation(fields: [created_by_admin], references: [id])
+  admin            Admin     @relation(fields: [created_by_admin], references: [id])
 
   Application  Application[]  @relation()
   UserScoreLog UserScoreLog[] @relation()
