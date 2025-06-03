@@ -4,7 +4,6 @@ export const positionController = {
   
   listPublic: async (request, reply) => {
     const { filter = '', page = 1, pageSize = 10, } = request.query
-    console.log("filter:", filter);
     const result = await positionService.listPublic({
       filter,
       page: Number(page),

@@ -3,8 +3,6 @@ import {applicationService} from "./applicationService.js"
 export const applicationController = {
 
   create: async (req, reply) => {
-    console.log(req.user.id);
-    console.log(req.body);
     const { positions_id } = req.body;
     const user_id = req.user.id;
 

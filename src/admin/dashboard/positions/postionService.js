@@ -45,14 +45,14 @@ export const positionService = {
     const admin = await adminRepository.findById(adminId)
 
     if (!admin || admin.hospital_id !== hospitalId) {
-      throw new Error('Você não tem permissão para deletar esta posição')
+      throw new ClientError('Você não tem permissão para deletar esta posição')
     }
 
 
     const position = await positionRepository.findByIdAndHospital(id, hospitalId)
 
     if (!position) {
-      throw new Error('Position não encontrada ou não pertence ao seu hospital')
+      throw new ClientError('Position não encontrada ou não pertence ao seu hospital')
     }
 
 

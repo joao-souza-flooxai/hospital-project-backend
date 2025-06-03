@@ -31,9 +31,3 @@ app.listen({ port: process.env.PORT || 8080, host: '0.0.0.0' }).then(() => {
     console.log('Server running on PORT:  ' +  process.env.PORT)
 })
 
-
-//Rota para test(excluir dps)
-app.post('/test', async (req, reply) => {
-  console.log('Body /test:', req.body);
-  return { received: req.body };
-});

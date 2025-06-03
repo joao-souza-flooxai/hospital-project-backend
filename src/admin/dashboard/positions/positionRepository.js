@@ -69,10 +69,10 @@ export const positionRepository = {
       title: {
         contains: filter || '',
         mode: 'insensitive',
-      },
-      spots: {
-        gt: 0,
-      },
+      }
+      //, spots: {
+      //   gt: 0,
+      // },
     },
     include: {
       admin: {

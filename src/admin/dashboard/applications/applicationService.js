@@ -1,60 +1,74 @@
+import { ClientError } from "../../../errors/clientError.js"
 import { prisma } from "../../../prisma/client.js"
 
 export const applicationService = {
-  async updateStatus({ applicationId, status, adminId }) {
-    const application = await prisma.application.findUniqueOrThrow({
-      where: { id: applicationId },
-      include: { position: true, user: true },
-    })
 
-    const admin = await prisma.admin.findUniqueOrThrow({
-      where: { id: adminId },
-    })
+async updateStatus({ applicationId, status, adminId }) {
+  const application = await prisma.application.findUniqueOrThrow({
+    where: { id: applicationId },
+    include: { user: true, position: true },
+  })
 
-    if (application.position.hospital_id !== admin.hospital_id) {
-      throw new Error('Not authorized')
-    }
+  const admin = await prisma.admin.findUniqueOrThrow({
+    where: { id: adminId },
+  })
 
-    if (!['ACTIVE', 'CLOSED'].includes(status)) {
-      throw new Error('Invalid status')
-    }
+  if (application.position.hospital_id !== admin.hospital_id) {
+    throw new ClientError('Not authorized')
+  }
 
-    const operations = []
+  if (!['ACTIVE', 'CLOSED'].includes(status)) {
+    throw new ClientError('Invalid status')
+  }
 
-    const updateApplication = prisma.application.update({
-      where: { id: applicationId },
+  const operations = []
+
+  const updateApplication = prisma.application.update({
+    where: { id: applicationId },
+    data: {
+      status,
+      finished_at: new Date(),
+      action_by_admin: admin.id,
+      approved_at: status === 'ACTIVE' ? new Date() : null,
+    },
+  })
+
+  operations.push(updateApplication)
+
+  if (status === 'ACTIVE') {
+    const updateUser = prisma.user.update({
+      where: { id: application.user_id },
       data: {
-        status,
-        finished_at: new Date(),
-        action_by_admin: admin.id,
-        approved_at: status === 'ACTIVE' ? new Date() : null,
+        score: application.user.score + application.position.score,
       },
     })
+    operations.push(updateUser)
+  } else {
+    const updatePosition = prisma.position.update({
+      where: { id: application.positions_id },
+      data: {
+        spots: { increment: 1 },
+      },
+    })
+    operations.push(updatePosition)
+  }
 
-    operations.push(updateApplication)
+  await prisma.$transaction(operations)
 
-    if (status === 'ACTIVE') {
-      const updateUser = prisma.user.update({
-        where: { id: application.user_id },
-        data: {
-          score: application.user.score + application.position.score,
-        },
-      })
-      operations.push(updateUser)
-    } else {
-      const updatePosition = prisma.position.update({
-        where: { id: application.positions_id },
-        data: {
-          spots: { increment: 1 },
-        },
-      })
-      operations.push(updatePosition)
-    }
+  const updatedPosition = await prisma.position.findUniqueOrThrow({
+    where: { id: application.positions_id },
+  })
 
-    const [updatedApplication] = await prisma.$transaction(operations)
+  const updatedApplication = await prisma.application.findUniqueOrThrow({
+    where: { id: applicationId },
+    include: { user: true,  position: true},
+  })
 
-    return updatedApplication
-  },
+  return {
+    application: updatedApplication,
+    position: updatedPosition,
+  }
+},
 
   async listAll({ adminId, hospitalId }) {
     const admin = await prisma.admin.findUniqueOrThrow({
@@ -62,7 +76,7 @@ export const applicationService = {
     })
 
     if (admin.hospital_id !== hospitalId) {
-      throw new Error('Not authorized')
+      throw new ClientError('Not authorized')
     }
 
     const applications = await prisma.application.findMany({

@@ -6,7 +6,6 @@ export const applicationController = {
       const { id } = req.params
       const { status } = req.body
       const adminId = req.user.id
-      console.log(id, status, adminId)
       if (!status) {
         return reply.status(400).send({ message: 'Status é obrigatório' })
       }
@@ -35,7 +34,6 @@ export const applicationController = {
       const hospitalId = req.user.hospital_id
 
       const applications = await applicationService.listAll({ adminId, hospitalId })
-      console.log(applications);
       return reply.send(applications)
     } catch (error) {
       console.error(error)
